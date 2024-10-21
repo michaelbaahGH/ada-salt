@@ -11,7 +11,7 @@ export default function Hero() {
         className="brightness-50"
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center text-white">
+        <div className="text-center text-black">
           <h1 className="text-5xl font-bold mb-4">Our Story</h1>
           <p className="text-xl max-w-2xl mx-auto">
             Cultivating Quality, Nurturing Nature, and Empowering Communities

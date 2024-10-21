@@ -8,7 +8,7 @@ export default function Story() {
           <CardContent className="p-8">
             <h2 className="text-3xl font-bold mb-6 text-center">Our Journey</h2>
             <div className="space-y-6">
-              <p className="text-black">
+              <p>
                 Founded in 2008, Golden Harvest Cashews Ltd. began as a small
                 family-owned farm in the lush landscapes of Ghana's Bono Region.
                 Our founders, driven by a passion for sustainable agriculture
