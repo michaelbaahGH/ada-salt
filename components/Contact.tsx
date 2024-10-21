@@ -21,7 +21,7 @@ export default function Contact() {
               <form className="space-y-4">
                 <Input type="text" placeholder="Your Name" required />
                 <Input type="email" placeholder="Your Email" required />
-                <Input type="text" placeholder="Subject" required />
+                <Input type="text" placeholder="Your Phone Number" required />
                 <Textarea placeholder="Your Message" required />
                 <Button type="submit" className="w-full">
                   Send Message
