@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+// import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const images = [
@@ -37,7 +37,7 @@ const images = [
 ];
 
 export default function Gallery() {
-  const [selectedImage, setSelectedImage] = useState(null);
+  // const [selectedImage, setSelectedImage] = useState(null);
 
   return (
     <section id="gallery" className="py-20 bg-white">
