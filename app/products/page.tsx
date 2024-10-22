@@ -1,240 +1,270 @@
 "use client";
 import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Package2, Award, ShieldCheck, Leaf, ChevronRight } from "lucide-react";
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import { Button } from "@/components/ui/button";
+import { ChevronRight, Globe, Sparkles, Star, Gauge, Box } from "lucide-react";
+
+// Types for grade and stat data
+type Grade = {
+  name: string;
+  description: string;
+  stats: { protein: string; fat: string; calories: string };
+  features: string[];
+  price: string;
+};
+
+type Stat = {
+  value: string;
+  label: string;
+  icon: React.ElementType;
+};
 
 const ProcessedCashewsPage = () => {
-  const [activeGrade, setActiveGrade] = useState<keyof Grades>("whole");
+  const [activeGrade, setActiveGrade] = useState<string>("whole");
+  const { scrollYProgress } = useScroll();
+  const [statsRef, statsInView] = useInView({
+    threshold: 0.2,
+    triggerOnce: true,
+  });
+  const [heroRef, heroInView] = useInView({ threshold: 0.1 });
 
-  // Define the grades type
-  type Grade = {
-    name: string;
-    description: string;
-  };
+  // Smooth scroll progress for hero parallax
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1]);
+  const textY = useTransform(scrollYProgress, [0, 0.3], [0, 100]);
 
-  type Grades = {
-    [key: string]: Grade;
-  };
-
-  const grades: Grades = {
+  const grades: { [key: string]: Grade } = {
     whole: {
-      name: "Whole Cashews",
-      description: "Perfect for snacking and gourmet applications.",
+      name: "Premium Whole Cashews",
+      description:
+        "Hand-selected, perfectly intact cashews for the most discerning customers.",
+      stats: { protein: "5.2g", fat: "12.4g", calories: "157" },
+      features: ["Perfect Shape", "Premium Grade", "Gourmet Quality"],
+      price: "$24.99/lb",
     },
     splits: {
-      name: "Splits",
-      description: "Ideal for baking and confectionery use.",
+      name: "Golden Splits",
+      description:
+        "Expertly split cashews, ideal for luxury baking and confectionery.",
+      stats: { protein: "5.0g", fat: "12.1g", calories: "153" },
+      features: ["Consistent Size", "Baker's Choice", "Cost-Effective"],
+      price: "$21.99/lb",
     },
     pieces: {
-      name: "Pieces",
-      description: "Great for cooking and as an ingredient in various foods.",
+      name: "Artisanal Pieces",
+      description:
+        "Premium cashew pieces, perfect for gourmet cooking and toppings.",
+      stats: { protein: "4.8g", fat: "11.9g", calories: "150" },
+      features: ["Uniform Size", "Recipe-Ready", "Bulk Value"],
+      price: "$19.99/lb",
     },
   };
 
+  const stats: Stat[] = [
+    { value: "25+", label: "Years of Excellence", icon: Star },
+    { value: "50+", label: "Countries Served", icon: Globe },
+    { value: "100K+", label: "Metric Tons Processed", icon: Box },
+    { value: "99.9%", label: "Quality Rating", icon: Gauge },
+  ];
+
   return (
-    <div className="bg-gradient-to-b from-amber-50 to-amber-100 min-h-screen overflow-hidden">
+    <div className="bg-gradient-to-b from-stone-950 to-stone-900 text-white min-h-screen">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        <motion.div
-          initial={{ opacity: 0, scale: 1.2 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.5 }}
-          className="absolute inset-0 z-0"
-        >
+      <section
+        ref={heroRef}
+        className="relative min-h-[80vh] flex items-center justify-center overflow-hidden"
+      >
+        <motion.div style={{ opacity: 1 }} className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-amber-700/20 mix-blend-overlay z-10" />
           <img
             src="/api/placeholder/2000/1000"
-            alt="Cashews"
+            alt="Premium Cashews"
             className="object-cover w-full h-full"
           />
         </motion.div>
-        <div className="absolute inset-0 bg-black bg-opacity-40 z-10"></div>
-        <div className="relative z-20 text-center text-white max-w-4xl px-4">
-          <motion.h1
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold mb-6"
-          >
-            Premium Processed Cashews
-          </motion.h1>
-          <motion.p
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="text-xl md:text-2xl mb-8"
-          >
-            Taste the Quality, Experience the Excellence
-          </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 100 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="relative z-20 text-center max-w-5xl px-4"
+        >
           <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            className="mb-6"
+          >
+            <Sparkles className="w-16 h-16 text-amber-400 mx-auto" />
+          </motion.div>
+
+          <h1 className="text-4xl md:text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600">
+            LUXURY CASHEWS
+          </h1>
+
+          <p className="text-xl md:text-3xl mb-12 text-amber-100 font-light tracking-wide">
+            Elevating Culinary Excellence Since 1999
+          </p>
+
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="inline-block"
           >
             <Button
               size="lg"
-              className="bg-amber-500 hover:bg-amber-600 text-white text-lg px-8 py-6"
+              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25"
             >
-              Explore Our Products
+              Explore Collection
+              <ChevronRight className="ml-2 h-6 w-6" />
             </Button>
           </motion.div>
-        </div>
-        <motion.div
-          animate={{ y: [0, 20, 0] }}
-          transition={{ repeat: Infinity, duration: 1.5 }}
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20"
-        >
-          <ChevronRight size={40} className="text-white rotate-90" />
         </motion.div>
       </section>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-24">
-        {/* Product Overview */}
-        <section className="mb-32">
-          <h2 className="text-4xl font-bold mb-12 text-center">
-            Our Premium Cashews
-          </h2>
+      {/* Stats Section */}
+      <section
+        ref={statsRef}
+        className="relative py-32 bg-gradient-to-b from-stone-900/50 to-stone-950/50 backdrop-blur-lg"
+      >
+        <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Package2,
-                title: "Product Grades",
-                desc: "Multiple grades to suit various market needs.",
-              },
-              {
-                icon: Award,
-                title: "Premium Quality",
-                desc: "Meticulously processed for optimal taste and texture.",
-              },
-              {
-                icon: ShieldCheck,
-                title: "Certifications",
-                desc: "Compliant with global food safety standards.",
-              },
-              {
-                icon: Leaf,
-                title: "Sustainable",
-                desc: "Committed to ethical and environmental practices.",
-              },
-            ].map((feature, index) => (
+            {stats.map((stat, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                animate={statsInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                className="text-center"
               >
-                <Card className="bg-white/80 backdrop-blur-md shadow-lg hover:shadow-xl transition-all hover:-translate-y-2">
-                  <CardHeader>
-                    <feature.icon className="w-12 h-12 mb-4 text-amber-500" />
-                    <CardTitle className="text-xl font-semibold">
-                      {feature.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-gray-700">
-                      {feature.desc}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        {/* Interactive Product Showcase */}
-        <section className="mb-32">
-          <h2 className="text-4xl font-bold mb-12 text-center">
-            Explore Our Grades
-          </h2>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8">
-            <div className="w-full md:w-1/2">
-              <motion.img
-                key={activeGrade}
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
-                src={`/api/placeholder/600/400?text=${grades[activeGrade].name}`}
-                alt={grades[activeGrade].name}
-                className="w-full h-[400px] object-cover rounded-lg shadow-xl"
-              />
-            </div>
-            <div className="w-full md:w-1/2 space-y-6">
-              {Object.entries(grades).map(([key, { name, description }]) => (
                 <motion.div
-                  key={key}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`p-4 rounded-lg cursor-pointer transition-colors ${
-                    activeGrade === key ? "bg-amber-500 text-white" : "bg-white"
-                  }`}
-                  onClick={() => setActiveGrade(key as keyof Grades)} // Ensure key is correctly typed
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="inline-block mb-4"
                 >
-                  <h3 className="text-2xl font-semibold mb-2">{name}</h3>
-                  <p>{description}</p>
+                  <stat.icon className="w-12 h-12 text-amber-400" />
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Parallax Section */}
-        <section className="relative h-[60vh] mb-32 overflow-hidden">
-          <motion.div
-            initial={{ y: -50 }}
-            whileInView={{ y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="absolute inset-0 z-0"
-          >
-            <img
-              src="/api/placeholder/2000/1000?text=Our Process"
-              alt="Cashew Processing"
-              className="object-cover w-full h-full"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-black bg-opacity-50 z-10"></div>
-          <div className="relative z-20 h-full flex items-center justify-center text-white">
-            <div className="text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Our Meticulous Process
-              </h2>
-              <p className="text-xl max-w-2xl mx-auto">
-                From careful selection to precise processing, every step is
-                designed to bring you the finest cashews.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Certifications */}
-        <section className="mb-32">
-          <h2 className="text-4xl font-bold mb-12 text-center">
-            Our Certifications
-          </h2>
-          <div className="flex flex-wrap justify-center gap-6">
-            {["ISO 22000", "HACCP", "FDA", "FSSC 22000"].map((cert, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.5 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-full px-8 py-4 font-semibold text-amber-800 shadow-lg"
-              >
-                {cert}
+                <motion.h3 className="text-5xl font-bold mb-2 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                  {stat.value}
+                </motion.h3>
+                <p className="text-amber-100/80 text-lg">{stat.label}</p>
               </motion.div>
             ))}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      {/* Product Showcase */}
+      <section className="py-32 relative overflow-hidden">
+        <div className="container mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+              Premium Selection
+            </h2>
+            <p className="text-xl text-amber-100/80 max-w-3xl mx-auto">
+              Discover our curated collection of premium cashews, each grade
+              carefully selected and processed to perfection.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="relative">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeGrade}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                  transition={{ duration: 0.5 }}
+                  className="relative aspect-square"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-500/20 to-amber-600/20 rounded-2xl shadow-lg" />
+                  <img
+                    src={`/api/placeholder/600/600?grade=${activeGrade}`}
+                    alt={grades[activeGrade].name}
+                    className="w-full h-full object-cover rounded-2xl"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+              >
+                <h3 className="text-4xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                  {grades[activeGrade].name}
+                </h3>
+                <p className="text-lg text-amber-100/80">
+                  {grades[activeGrade].description}
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                viewport={{ once: true }}
+              >
+                <ul className="space-y-2 text-amber-100/90">
+                  {grades[activeGrade].features.map((feature, index) => (
+                    <li key={index} className="text-lg flex items-center">
+                      <Sparkles className="w-5 h-5 mr-2 text-amber-400" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="mt-4"
+              >
+                <p className="text-xl text-amber-100/90">
+                  <span className="font-semibold">Price: </span>
+                  {grades[activeGrade].price}
+                </p>
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Grade Selector */}
+          <div className="flex space-x-4 justify-center mt-16">
+            {Object.keys(grades).map((gradeKey) => (
+              <Button
+                key={gradeKey}
+                variant={activeGrade === gradeKey ? "default" : "ghost"}
+                size="lg"
+                onClick={() => setActiveGrade(gradeKey)}
+                className={`bg-gradient-to-r ${
+                  activeGrade === gradeKey
+                    ? "from-amber-500 to-amber-600 text-white"
+                    : "text-amber-400 hover:bg-amber-500/10"
+                } text-xl px-8 py-4 rounded-full`}
+              >
+                {grades[gradeKey].name}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
