@@ -267,7 +267,7 @@ function ServicesGrid({
   title: string;
   subtitle: string;
 }) {
-  const [hoveredService, setHoveredService] = useState(null);
+  const [hoveredService, setHoveredService] = useState<number | null>(null);
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -313,7 +313,7 @@ function ServicesGrid({
                     transition={{ duration: 0.2 }}
                     className="mb-6 text-amber-400"
                   >
-                    <service.icon className="w-12 h-12" />
+                    <service.icon />
                   </motion.div>
                   <h3 className="text-xl font-semibold text-amber-100 mb-4">
                     {service.title}
