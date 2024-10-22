@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   motion,
   AnimatePresence,
@@ -23,7 +23,31 @@ import {
 } from "lucide-react";
 
 // Enhanced particle effect component
+
 const Particles = () => {
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    // Set window dimensions once the component is mounted
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    // Optional: Add a resize listener to handle window resizing
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const particles = Array.from({ length: 50 });
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -32,12 +56,12 @@ const Particles = () => {
           key={i}
           className="absolute w-1 h-1 bg-amber-400/30 rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
           }}
           animate={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
           }}
           transition={{
             duration: Math.random() * 10 + 20,
