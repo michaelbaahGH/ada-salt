@@ -1,23 +1,24 @@
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import { Autoplay, Pagination } from "swiper/modules";
-// import "swiper/css";
-// import "swiper/css/pagination";
-// import { Card, CardContent } from "@/components/ui/card";
+"use client";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Card, CardContent } from "@/components/ui/card";
 
-// const testimonials = [
-//   {
-//     text: "Golden Harvest's cashews are the best we've ever sourced. The quality and consistency are unmatched. We've been working with them for over 5 years.",
-//     author: "SunTrade Foods",
-//   },
-//   {
-//     text: "Our customers love the taste and freshness of the roasted cashews. We're proud to offer Golden Harvest products in our stores.",
-//     author: "FreshMart, Accra",
-//   },
-//   {
-//     text: "The commitment to organic farming and fair trade practices makes Golden Harvest Cashews our top choice for premium nuts.",
-//     author: "EcoNuts Distributors",
-//   },
-// ];
+const testimonials = [
+  {
+    text: "Golden Harvest's cashews are the best we've ever sourced. The quality and consistency are unmatched. We've been working with them for over 5 years.",
+    author: "SunTrade Foods",
+  },
+  {
+    text: "Our customers love the taste and freshness of the roasted cashews. We're proud to offer Golden Harvest products in our stores.",
+    author: "FreshMart, Accra",
+  },
+  {
+    text: "The commitment to organic farming and fair trade practices makes Golden Harvest Cashews our top choice for premium nuts.",
+    author: "EcoNuts Distributors",
+  },
+];
 
 export default function Testimonials() {
   return (
@@ -26,7 +27,7 @@ export default function Testimonials() {
         <h2 className="text-4xl font-bold text-center mb-12">
           What Our Clients Say
         </h2>
-        {/* <Swiper
+        <Swiper
           spaceBetween={30}
           centeredSlides={true}
           autoplay={{
@@ -51,7 +52,7 @@ export default function Testimonials() {
               </Card>
             </SwiperSlide>
           ))}
-        </Swiper> */}
+        </Swiper>
       </div>
     </section>
   );
