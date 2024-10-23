@@ -1,48 +1,36 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useSpring,
-} from "framer-motion";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
-  Truck,
-  Package2,
-  ShieldCheck,
-  Globe,
-  BarChart,
+  Droplets,
+  Leaf,
+  TrendingUp,
   Users,
   ChevronRight,
   Sparkles,
-  Leaf,
   BadgeCheck,
   Scale,
-  Workflow,
-  DollarSign,
-  BarChart3,
-  GanttChartSquare,
-  Ship,
-  PlaneTakeoff,
+  Truck,
+  PhoneCall,
+  MessageSquare,
+  BookOpen,
+  Heart,
 } from "lucide-react";
 
-// Particles component from the about page
+// Reuse the Particles component from your original code
 const Particles = () => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
-    // Set window dimensions once the component is mounted
+  React.useEffect(() => {
     setWindowSize({
       width: window.innerWidth,
       height: window.innerHeight,
     });
 
-    // Optional: Add a resize listener to handle window resizing
     const handleResize = () => {
       setWindowSize({
         width: window.innerWidth,
@@ -51,8 +39,6 @@ const Particles = () => {
     };
 
     window.addEventListener("resize", handleResize);
-
-    // Cleanup the event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -82,217 +68,122 @@ const Particles = () => {
   );
 };
 
-interface Service {
-  icon: React.ComponentType; // Type for the icon component
-  title: string;
-  description: string;
-  features: string[];
-}
-
-// Enhanced services data
-const services: Service[] = [
+const services = [
+  {
+    icon: Droplets,
+    title: "Salt Production",
+    description: "High-quality, locally sourced salt using sustainable methods",
+    features: [
+      "Sustainable and eco-friendly production",
+      "Locally sourced materials",
+      "Competitive pricing",
+      "Premium grade quality",
+    ],
+  },
   {
     icon: Truck,
-    title: "Export Logistics",
-    description:
-      "Comprehensive logistics management including customs clearance, documentation, and international shipping coordination.",
+    title: "Distribution Services",
+    description: "Comprehensive logistics and distribution support",
     features: [
-      "Real-time shipment tracking",
-      "Customs documentation",
-      "Multi-modal transport solutions",
+      "Local and regional delivery",
+      "Bulk shipping available",
+      "Real-time tracking",
+      "Flexible scheduling",
     ],
   },
   {
-    icon: Package2,
-    title: "Custom Packaging & Labeling",
-    description:
-      "Tailored packaging solutions meeting international standards and market-specific requirements.",
-    features: [
-      "Eco-friendly materials",
-      "Market-specific labeling",
-      "Custom branding options",
-    ],
-  },
-  {
-    icon: ShieldCheck,
+    icon: Scale,
     title: "Quality Assurance",
-    description:
-      "Rigorous quality control processes ensuring premium grade cashews for international markets.",
-    features: ["ISO certification", "Quality testing", "Freshness guarantee"],
-  },
-  {
-    icon: Ship,
-    title: "Maritime Solutions",
-    description:
-      "Specialized maritime shipping services for bulk cashew exports worldwide.",
+    description: "Rigorous testing and quality control processes",
     features: [
-      "Container optimization",
-      "Port coordination",
-      "Temperature control",
-    ],
-  },
-];
-
-const valueAddedServices: Service[] = [
-  {
-    icon: Globe,
-    title: "Market Analysis",
-    description:
-      "Comprehensive global market insights for strategic export decisions.",
-    features: [
-      "Price trend analysis",
-      "Market demand forecasting",
-      "Competitor analysis",
-    ],
-  },
-  {
-    icon: BarChart,
-    title: "Supply Chain Optimization",
-    description:
-      "Expert solutions for streamlined, efficient supply chain operations.",
-    features: [
-      "Cost optimization",
-      "Inventory management",
-      "Process automation",
+      "Regular quality checks",
+      "Industry certifications",
+      "Pure product guarantee",
+      "Batch tracking",
     ],
   },
   {
     icon: Users,
     title: "Customer Support",
-    description:
-      "24/7 dedicated support ensuring seamless communication and issue resolution.",
+    description: "Dedicated support for all your needs",
     features: [
-      "Multi-lingual support",
-      "Real-time updates",
-      "Dedicated account manager",
-    ],
-  },
-  {
-    icon: PlaneTakeoff,
-    title: "Air Freight Solutions",
-    description: "Premium air freight services for time-sensitive deliveries.",
-    features: [
-      "Express delivery",
-      "Temperature control",
-      "Door-to-door service",
+      "24/7 availability",
+      "Expert consultation",
+      "Order management",
+      "Custom solutions",
     ],
   },
 ];
 
-// type SetHoveredService = React.Dispatch<React.SetStateAction<number | null>>;
-
-interface Stat {
-  value: string;
-  label: string;
-}
-
-// Stats section data
-const stats: Stat[] = [
-  { value: "50+", label: "Countries Served" },
-  { value: "99.9%", label: "On-Time Delivery" },
-  { value: "24/7", label: "Support Available" },
-  { value: "100K+", label: "Tons Exported" },
+const testimonials = [
+  {
+    quote: "Top-quality salt and great community-driven service!",
+    author: "Kwame Mensah",
+    role: "Business Owner",
+  },
+  {
+    quote: "Their commitment to sustainability sets them apart.",
+    author: "Sarah Johnson",
+    role: "Restaurant Manager",
+  },
+  {
+    quote: "Reliable service and excellent product quality.",
+    author: "David Chen",
+    role: "Food Industry Executive",
+  },
 ];
 
 function Hero() {
-  const { scrollYProgress } = useScroll();
-  const springScrollProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
-
-  const heroOpacity = useTransform(springScrollProgress, [0, 0.3], [1, 0]);
-  const heroScale = useTransform(springScrollProgress, [0, 0.3], [1, 1.1]);
-  const textY = useTransform(springScrollProgress, [0, 0.3], [0, 100]);
-  const [heroRef, heroInView] = useInView({ threshold: 0.1 });
-
   return (
-    <section
-      ref={heroRef}
-      className="relative min-h-[90vh] flex items-center justify-center overflow-hidden"
-    >
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       <Particles />
-      <motion.div
-        style={{ opacity: heroOpacity, scale: heroScale }}
-        className="absolute inset-0 z-0"
-      >
+      <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-amber-700/20 mix-blend-overlay z-10" />
         <img
           src="/api/placeholder/2000/1000"
-          alt="Cashew Export Services"
+          alt="Salt Production"
           className="object-cover w-full h-full"
         />
-      </motion.div>
+      </div>
 
       <motion.div
-        style={{ y: textY }}
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
         className="relative z-20 text-center max-w-5xl px-4"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 200,
-            damping: 20,
-            delay: 0.5,
-          }}
+          transition={{ duration: 1, delay: 0.3 }}
           className="mb-6"
         >
           <Sparkles className="w-20 h-20 text-amber-400 mx-auto animate-pulse" />
         </motion.div>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="text-5xl md:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600"
-        >
-          Export Excellence
-        </motion.h1>
+        <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600">
+          Pure Salt, Pure Excellence
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="text-2xl md:text-4xl text-amber-100 font-light tracking-wide mb-12"
-        >
-          Your Gateway to Global Cashew Markets
-        </motion.p>
+        <p className="text-2xl md:text-4xl text-amber-100 font-light tracking-wide mb-12">
+          Sustainable Salt Production for Ada and Beyond
+        </p>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button
             size="lg"
             className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25"
           >
-            Explore Our Services
+            Discover Our Products
             <ChevronRight className="ml-2 h-6 w-6" />
           </Button>
         </motion.div>
       </motion.div>
-
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-950 to-transparent" />
     </section>
   );
 }
 
-function ServicesGrid({
-  services,
-  title,
-  subtitle,
-}: {
-  services: Service[];
-  title: string;
-  subtitle: string;
-}) {
-  const [hoveredService, setHoveredService] = useState<number | null>(null);
+function ServicesGrid() {
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -307,15 +198,15 @@ function ServicesGrid({
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-            {title}
+            Our Services
           </h2>
           <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
-            {subtitle}
+            Comprehensive salt production and distribution solutions
           </p>
         </motion.div>
 
@@ -326,19 +217,14 @@ function ServicesGrid({
               initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              onHoverStart={() => setHoveredService(index)}
-              onHoverEnd={() => setHoveredService(null)}
             >
-              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 hover:border-amber-500/40 transition-all duration-300 h-full">
                 <CardContent className="p-8">
                   <motion.div
-                    animate={{
-                      scale: hoveredService === index ? 1.1 : 1,
-                    }}
-                    transition={{ duration: 0.2 }}
+                    whileHover={{ scale: 1.1 }}
                     className="mb-6 text-amber-400"
                   >
-                    <service.icon />
+                    <service.icon className="w-12 h-12" />
                   </motion.div>
                   <h3 className="text-xl font-semibold text-amber-100 mb-4">
                     {service.title}
@@ -352,7 +238,7 @@ function ServicesGrid({
                         key={idx}
                         className="flex items-center text-amber-100/80"
                       >
-                        <BadgeCheck className="w-4 h-4 text-amber-400 mr-2" />
+                        <BadgeCheck className="w-4 h-4 text-amber-400 mr-2 flex-shrink-0" />
                         <span className="text-sm">{feature}</span>
                       </li>
                     ))}
@@ -367,7 +253,7 @@ function ServicesGrid({
   );
 }
 
-function Stats() {
+function Testimonials() {
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -376,33 +262,45 @@ function Stats() {
   return (
     <section
       ref={ref}
-      className="py-20 bg-gradient-to-b from-stone-950 to-stone-900 relative"
+      className="py-32 bg-gradient-to-b from-stone-950 to-stone-900 relative"
     >
       <Particles />
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {stats.map((stat, index) => (
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            What Our Clients Say
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 50 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20">
-                <CardContent className="p-8 text-center">
-                  <motion.p
-                    className="text-4xl font-bold text-amber-400 mb-2"
-                    initial={{ scale: 0 }}
-                    animate={inView ? { scale: 1 } : {}}
-                    transition={{
-                      type: "spring",
-                      stiffness: 100,
-                      delay: index * 0.1,
-                    }}
-                  >
-                    {stat.value}
-                  </motion.p>
-                  <p className="text-amber-100/60">{stat.label}</p>
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+                <CardContent className="p-8">
+                  <MessageSquare className="w-12 h-12 text-amber-400 mb-6" />
+                  <p className="text-xl text-amber-100 italic mb-6">
+                    "{testimonial.quote}"
+                  </p>
+                  <div className="flex items-center">
+                    <div>
+                      <p className="font-semibold text-amber-400">
+                        {testimonial.author}
+                      </p>
+                      <p className="text-amber-100/60 text-sm">
+                        {testimonial.role}
+                      </p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -413,7 +311,25 @@ function Stats() {
   );
 }
 
-function CallToAction() {
+function FAQSection() {
+  const faqs = [
+    {
+      question: "Do you offer bulk pricing?",
+      answer:
+        "Yes, we provide discounts for large orders. Contact our sales team for a custom quote.",
+    },
+    {
+      question: "How do I place an order?",
+      answer:
+        "Contact us via phone or email for a quote. Our team will guide you through the process.",
+    },
+    {
+      question: "What makes your salt production sustainable?",
+      answer:
+        "We use eco-friendly practices, minimize waste, and employ local workers to reduce our carbon footprint.",
+    },
+  ];
+
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -425,49 +341,169 @@ function CallToAction() {
       className="py-32 bg-gradient-to-b from-stone-900 to-stone-950 relative"
     >
       <Particles />
-      <div className="container mx-auto px-4 text-center">
+      <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            Frequently Asked Questions
+          </h2>
+        </motion.div>
+
+        <div className="max-w-3xl mx-auto">
+          {faqs.map((faq, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="mb-8"
+            >
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+                <CardContent className="p-8">
+                  <h3 className="text-xl font-semibold text-amber-400 mb-4 flex items-center">
+                    <BookOpen className="w-6 h-6 mr-3" />
+                    {faq.question}
+                  </h3>
+                  <p className="text-amber-100/60">{faq.answer}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CallToAction() {
+  return (
+    <section className="py-32 bg-gradient-to-b from-stone-950 to-stone-900 relative">
+      <Particles />
+      <div className="container mx-auto px-4 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-4xl mx-auto"
         >
           <h2 className="text-4xl md:text-6xl font-bold mb-8 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-            Ready to Export with Us?
+            Ready to Work With Us?
           </h2>
-          <p className="text-xl text-amber-100/60 mb-12 max-w-2xl mx-auto">
-            Join our network of successful exporters and access premium global
-            markets
+          <p className="text-xl text-amber-100/60 mb-12">
+            Get in touch today for high-quality products and expert services!
           </p>
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25"
-            >
-              Contact Our Team
-              <ChevronRight className="ml-2 h-6 w-6" />
-            </Button>
-          </motion.div>
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25 w-full md:w-auto"
+              >
+                <PhoneCall className="w-6 h-6 mr-2" />
+                Contact Us
+              </Button>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-amber-500 text-amber-400 hover:bg-amber-500/10 text-xl px-12 py-8 rounded-full w-full md:w-auto"
+              >
+                <MessageSquare className="w-6 h-6 mr-2" />
+                Request Quote
+              </Button>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
     </section>
   );
 }
 
-export default function ExportServicesPage() {
+function Features() {
+  const features = [
+    {
+      icon: Leaf,
+      title: "Sustainability",
+      description:
+        "Environmentally-friendly practices in every step of production",
+    },
+    {
+      icon: Users,
+      title: "Local Employment",
+      description: "Creating meaningful jobs for Ada residents",
+    },
+    {
+      icon: BadgeCheck,
+      title: "Quality Assurance",
+      description: "Top-notch production standards and rigorous testing",
+    },
+  ];
+
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  return (
+    <section
+      ref={ref}
+      className="py-32 bg-gradient-to-b from-stone-900 to-stone-950 relative"
+    >
+      <Particles />
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            Why Choose Us?
+          </h2>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 hover:border-amber-500/40 transition-all duration-300">
+                <CardContent className="p-8 text-center">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="inline-block mb-6 text-amber-400"
+                  >
+                    <feature.icon className="w-16 h-16" />
+                  </motion.div>
+                  <h3 className="text-2xl font-semibold text-amber-100 mb-4">
+                    {feature.title}
+                  </h3>
+                  <p className="text-amber-100/60">{feature.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function SaltServicesPage() {
   return (
     <main className="bg-stone-950 min-h-screen">
       <Hero />
-      <Stats />
-      <ServicesGrid
-        services={services}
-        title="Our Export Services"
-        subtitle="Comprehensive solutions for your cashew export needs"
-      />
-      <ServicesGrid
-        services={valueAddedServices}
-        title="Value-Added Services"
-        subtitle="Enhanced offerings to maximize your export potential"
-      />
+      <Features />
+      <ServicesGrid />
+      <Testimonials />
+      <FAQSection />
       <CallToAction />
     </main>
   );
