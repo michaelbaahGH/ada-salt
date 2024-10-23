@@ -1,61 +1,74 @@
 "use client";
 import React, { useState, useEffect } from "react";
+
+import { useInView } from "react-intersection-observer";
+import { Card, CardContent } from "@/components/ui/card";
+
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useTransform,
   useSpring,
-  AnimatePresence,
 } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Leaf,
+  Briefcase,
   Heart,
-  Star,
-  Coffee,
-  ArrowRight,
-  Sparkles,
-  ShoppingBag,
   Users,
-  Phone,
-  Globe,
+  Factory,
+  Sparkles,
+  Star,
+  ArrowRight,
+  Leaf,
+  DollarSign,
   Award,
-  TrendingUp,
   Shield,
+  Phone,
+  Mail,
+  MapPin,
 } from "lucide-react";
 
+// Reusing the Particles component from the About page
 const Particles = () => {
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const particles = Array.from({ length: 50 });
   return (
-    <div className="absolute inset-0 pointer-events-none">
-      {[...Array(50)].map((_, i) => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-amber-400/20 rounded-full"
+          className="absolute w-1 h-1 bg-amber-400/30 rounded-full"
           initial={{
-            x: Math.random() * 100 + "%",
-            y: "100%",
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
           }}
           animate={{
-            y: "-100%",
-            x: `${Math.random() * 100}%`,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
           }}
           transition={{
-            duration: 10 + Math.random() * 20,
+            duration: Math.random() * 10 + 20,
             repeat: Infinity,
             ease: "linear",
-            delay: Math.random() * 5,
           }}
         />
       ))}
@@ -63,439 +76,112 @@ const Particles = () => {
   );
 };
 
-const Hero = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 200]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+function Hero() {
+  const { scrollYProgress } = useScroll();
+  const springScrollProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  const heroOpacity = useTransform(springScrollProgress, [0, 0.3], [1, 0]);
+  const heroScale = useTransform(springScrollProgress, [0, 0.3], [1, 1.1]);
+  const textY = useTransform(springScrollProgress, [0, 0.3], [0, -50]);
 
   return (
-    <section className="min-h-screen relative overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <Particles />
       <motion.div
-        style={{ y, opacity }}
-        className="absolute inset-0 flex items-center justify-center"
+        style={{ opacity: heroOpacity, scale: heroScale }}
+        className="absolute inset-0 z-0"
       >
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <h1 className="text-6xl md:text-8xl font-bold mb-8 bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-              Premium Organic Cashews
-            </h1>
-            <p className="text-xl md:text-2xl text-amber-100/60 mb-12 max-w-3xl mx-auto">
-              Experience the finest organic cashews, sustainably harvested and
-              carefully selected for unmatched quality and taste.
-            </p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="space-x-4"
-            >
-              <Button
-                size="lg"
-                className="bg-amber-500 hover:bg-amber-600 text-white"
-              >
-                Shop Now
-                <ShoppingBag className="ml-2" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-amber-500 text-amber-500 hover:bg-amber-500/10"
-              >
-                Learn More
-                <ArrowRight className="ml-2" />
-              </Button>
-            </motion.div>
-          </motion.div>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-500/20 to-amber-700/20 mix-blend-overlay z-10" />
+        <img
+          src="/api/placeholder/2000/1000"
+          alt="Salt Production in Ada"
+          className="object-cover w-full h-full"
+        />
       </motion.div>
-    </section>
-  );
-};
 
-const Products = () => {
-  const products = [
-    {
-      title: "Raw Cashews",
-      description: "Pure, unroasted cashews in their natural state",
-      price: "$12.99",
-      image: "/images/raw-cashews.jpg",
-    },
-    {
-      title: "Roasted Cashews",
-      description: "Perfectly roasted for enhanced flavor",
-      price: "$14.99",
-      image: "/images/roasted-cashews.jpg",
-    },
-    {
-      title: "Honey Glazed",
-      description: "Sweet and crunchy with natural honey",
-      price: "$16.99",
-      image: "/images/honey-cashews.jpg",
-    },
-    {
-      title: "Spicy Blend",
-      description: "Roasted with our special spice blend",
-      price: "$15.99",
-      image: "/images/spicy-cashews.jpg",
-    },
-  ];
+      <motion.div
+        style={{ y: textY }}
+        className="relative z-20 text-center max-w-5xl px-4"
+      >
+        <motion.h1
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="text-4xl md:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600"
+        >
+          Empowering Ada Through Salt Production
+        </motion.h1>
 
-  const [ref, inView] = useInView({
-    threshold: 0.2,
-    triggerOnce: true,
-  });
+        <motion.p
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.3 }}
+          className="text-xl md:text-2xl text-amber-100 font-light tracking-wide mb-12 max-w-3xl mx-auto"
+        >
+          ADA YFFD MIDDLE BELT COMPANY LTD is a leader in salt production,
+          committed to delivering high-quality products and driving sustainable
+          development in the Ada region.
+        </motion.p>
 
-  return (
-    <section className="py-32 bg-stone-900 relative">
-      <Particles />
-      <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-16"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="flex justify-center gap-6"
         >
-          <ShoppingBag className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-            Our Products
-          </h2>
-          <p className="text-xl text-amber-100/60 mt-4">
-            Discover our range of premium cashews
-          </p>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 bg-amber-500 text-stone-900 rounded-lg font-semibold text-lg flex items-center gap-2 hover:bg-amber-400 transition-colors"
+          >
+            Learn More
+            <ArrowRight className="w-5 h-5" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-8 py-4 border-2 border-amber-500 text-amber-500 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-colors"
+          >
+            Contact Us
+          </motion.button>
         </motion.div>
+      </motion.div>
 
-        <div
-          ref={ref}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-        >
-          {products.map((product, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card className="bg-stone-800/50 backdrop-blur-lg border-amber-500/20 overflow-hidden">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
-                  <img
-                    src={product.image}
-                    alt={product.title}
-                    className="w-full aspect-square object-cover"
-                  />
-                </motion.div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-bold text-amber-400 mb-2">
-                    {product.title}
-                  </h3>
-                  <p className="text-amber-100/60 mb-4">
-                    {product.description}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-2xl font-bold text-amber-400">
-                      {product.price}
-                    </span>
-                    <Button
-                      size="sm"
-                      className="bg-amber-500 hover:bg-amber-600 text-white"
-                    >
-                      Add to Cart
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-stone-950 to-transparent" />
     </section>
   );
-};
+}
 
-// Rest of the components (About, Testimonials, Contact) remain the same...
+const focusPoints = [
+  {
+    icon: <Users className="w-12 h-12" />,
+    title: "Local Employment",
+    description: "Creating meaningful job opportunities for the Ada community",
+  },
+  {
+    icon: <Factory className="w-12 h-12" />,
+    title: "Economic Growth",
+    description: "Driving sustainable development in the Ada region",
+  },
+  {
+    icon: <Star className="w-12 h-12" />,
+    title: "Customer Service",
+    description: "Delivering exceptional service and support",
+  },
+  {
+    icon: <Leaf className="w-12 h-12" />,
+    title: "Sustainability",
+    description: "Implementing eco-friendly production practices",
+  },
+];
 
-// Keeping your existing Particles component...
-
-const FloatingIcons = () => {
-  return (
-    <div className="absolute inset-0 pointer-events-none">
-      {[Leaf, Star, Coffee, Heart].map((Icon, index) => (
-        <motion.div
-          key={index}
-          className="absolute"
-          initial={{ y: "100vh" }}
-          animate={{
-            y: "-100vh",
-            x: Math.sin((index * Math.PI) / 2) * 200,
-          }}
-          transition={{
-            duration: 20 + index * 5,
-            repeat: Infinity,
-            ease: "linear",
-            delay: index * 2,
-          }}
-        >
-          <Icon className="w-8 h-8 text-amber-400/20" />
-        </motion.div>
-      ))}
-    </div>
-  );
-};
-
-const Stats = () => {
+function Focus() {
   const [ref, inView] = useInView({
-    threshold: 0.2,
-    triggerOnce: true,
-  });
-
-  const stats = [
-    { icon: Globe, value: "20+", label: "Countries Served" },
-    { icon: Award, value: "15+", label: "Quality Awards" },
-    { icon: TrendingUp, value: "50K+", label: "Happy Customers" },
-    { icon: Shield, value: "100%", label: "Organic Certified" },
-  ];
-
-  return (
-    <div ref={ref} className="grid grid-cols-2 lg:grid-cols-4 gap-8 my-16">
-      {stats.map((stat, index) => {
-        const Icon = stat.icon;
-        return (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 50 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="text-center"
-          >
-            <motion.div
-              whileHover={{ scale: 1.2, rotate: 360 }}
-              transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              className="inline-block mb-4"
-            >
-              <Icon className="w-12 h-12 text-amber-400" />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.5 + index * 0.1 }}
-            >
-              <div className="text-4xl font-bold text-amber-400 mb-2">
-                {stat.value}
-              </div>
-              <div className="text-amber-100/60">{stat.label}</div>
-            </motion.div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-};
-
-const About = () => {
-  const [ref, inView] = useInView({
-    threshold: 0.2,
-    triggerOnce: true,
-  });
-
-  return (
-    <section className="py-32 relative bg-gradient-to-b from-stone-900 to-stone-950">
-      <FloatingIcons />
-      <div className="container mx-auto px-4">
-        <motion.div
-          ref={ref}
-          className="grid lg:grid-cols-2 gap-16 items-center"
-        >
-          <motion.div
-            initial={{ opacity: 0, x: -100 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent mb-8">
-              Our Heritage & Commitment
-            </h2>
-            <div className="space-y-6 text-lg text-amber-100/80">
-              <p>
-                For three generations, our family has cultivated the finest
-                cashews in the heart of nature's most fertile grounds.
-              </p>
-              <p>
-                We combine traditional farming wisdom with modern sustainable
-                practices to bring you premium organic cashews that are not just
-                delicious, but also environmentally conscious.
-              </p>
-            </div>
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.4 }}
-              className="mt-8"
-            >
-              <Button
-                size="lg"
-                className="bg-amber-500 hover:bg-amber-600 text-white"
-              >
-                Learn Our Story
-                <ArrowRight className="ml-2" />
-              </Button>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.8 }}
-            className="relative"
-          >
-            <div className="aspect-square rounded-full overflow-hidden">
-              <img
-                src="/images/cashew-harvest.jpg"
-                alt="Cashew Harvest"
-                className="w-full h-full object-cover"
-              />
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-tr from-amber-500/20 to-transparent"
-                animate={{
-                  background: [
-                    "linear-gradient(to top right, rgba(245, 158, 11, 0.2), transparent)",
-                    "linear-gradient(to top right, rgba(245, 158, 11, 0.4), transparent)",
-                    "linear-gradient(to top right, rgba(245, 158, 11, 0.2), transparent)",
-                  ],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            </div>
-
-            <motion.div
-              className="absolute -bottom-8 -right-8 bg-amber-500 text-white p-6 rounded-lg shadow-xl"
-              initial={{ opacity: 0, y: 50 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6 }}
-            >
-              <div className="text-4xl font-bold mb-2">30+</div>
-              <div className="text-sm">Years of Excellence</div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-
-        <Stats />
-      </div>
-    </section>
-  );
-};
-
-const Testimonials = () => {
-  const testimonials = [
-    {
-      name: "Sarah Johnson",
-      role: "Food Critic",
-      image: "/images/testimonial1.jpg",
-      content:
-        "The most flavorful and consistently high-quality cashews I've ever tasted. Their commitment to organic farming shines through in every bite.",
-    },
-    {
-      name: "Michael Chen",
-      role: "Executive Chef",
-      image: "/images/testimonial2.jpg",
-      content:
-        "These cashews have become a staple ingredient in my kitchen. The quality and taste are unmatched, and knowing they're sustainably sourced makes them even better.",
-    },
-    {
-      name: "Emma Rodriguez",
-      role: "Health Coach",
-      image: "/images/testimonial3.jpg",
-      content:
-        "I recommend these cashews to all my clients. The perfect balance of nutrition and incredible taste, plus their organic certification gives me complete peace of mind.",
-    },
-  ];
-
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [ref, inView] = useInView({
-    threshold: 0.2,
-    triggerOnce: true,
-  });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <section ref={ref} className="py-32 bg-stone-950 relative overflow-hidden">
-      <Particles />
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-16"
-        >
-          <Users className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-            What Our Customers Say
-          </h2>
-        </motion.div>
-
-        <div className="max-w-4xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-              className="text-center"
-            >
-              <div className="mb-8">
-                <motion.img
-                  src={testimonials[activeIndex].image}
-                  alt={testimonials[activeIndex].name}
-                  className="w-24 h-24 rounded-full mx-auto object-cover"
-                  whileHover={{ scale: 1.1 }}
-                />
-              </div>
-              <blockquote className="text-2xl text-amber-100/80 italic mb-8">
-                "{testimonials[activeIndex].content}"
-              </blockquote>
-              <div className="text-amber-400 font-bold">
-                {testimonials[activeIndex].name}
-              </div>
-              <div className="text-amber-100/60">
-                {testimonials[activeIndex].role}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          <div className="flex justify-center space-x-2 mt-8">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setActiveIndex(index)}
-                className={`w-3 h-3 rounded-full transition-colors duration-300 ${
-                  index === activeIndex ? "bg-amber-400" : "bg-amber-400/20"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-const Contact = () => {
-  const [ref, inView] = useInView({
-    threshold: 0.2,
+    threshold: 0.1,
     triggerOnce: true,
   });
 
@@ -504,97 +190,504 @@ const Contact = () => {
       ref={ref}
       className="py-32 bg-gradient-to-b from-stone-950 to-stone-900 relative"
     >
-      <FloatingIcons />
+      <Particles />
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="max-w-5xl mx-auto"
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
         >
-          <div className="text-center mb-16">
-            <Phone className="w-12 h-12 text-amber-400 mx-auto mb-4" />
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-              Get in Touch
-            </h2>
-            <p className="text-xl text-amber-100/60 mt-4">
-              Have questions? We'd love to hear from you.
-            </p>
-          </div>
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            Our Focus
+          </h2>
+          <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
+            Driving positive change through sustainable salt production
+          </p>
+        </motion.div>
 
-          <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20">
-            <CardContent className="p-8">
-              <motion.form
-                initial="hidden"
-                animate={inView ? "visible" : "hidden"}
-                variants={{
-                  visible: { transition: { staggerChildren: 0.1 } },
-                }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-6"
-              >
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                >
-                  <label className="block text-amber-100 mb-2">Name</label>
-                  <Input className="bg-stone-800 border-amber-500/20 text-amber-100" />
-                </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {focusPoints.map((point, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 h-full">
+                <CardContent className="p-8 text-center">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="text-amber-400 mb-6 inline-block"
+                  >
+                    {point.icon}
+                  </motion.div>
+                  <h3 className="text-xl font-semibold text-amber-100 mb-4">
+                    {point.title}
+                  </h3>
+                  <p className="text-amber-100/60">{point.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
-                <motion.div
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                >
-                  <label className="block text-amber-100 mb-2">Email</label>
-                  <Input className="bg-stone-800 border-amber-500/20 text-amber-100" />
-                </motion.div>
+const products = [
+  {
+    title: "Premium Salt",
+    description: "High-quality, locally sourced salt for various applications",
+    image: "/api/placeholder/400/300",
+  },
+  {
+    title: "Industrial Salt",
+    description: "Bulk quantities for industrial and manufacturing needs",
+    image: "/api/placeholder/400/300",
+  },
+  {
+    title: "Custom Solutions",
+    description: "Tailored salt products for specific requirements",
+    image: "/api/placeholder/400/300",
+  },
+];
 
+function Products() {
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  return (
+    <section
+      ref={ref}
+      className="py-32 bg-gradient-to-b from-stone-900 to-stone-950 relative"
+    >
+      <Particles />
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 100 }}
+            className="inline-block mb-4"
+          >
+            <Factory className="w-12 h-12 text-amber-400" />
+          </motion.div>
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            Our Offerings
+          </h2>
+          <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
+            Explore our locally sourced, high-quality products and range of
+            services
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {products.map((product, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.2 }}
+            >
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 overflow-hidden">
                 <motion.div
-                  className="md:col-span-2"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <label className="block text-amber-100 mb-2">Message</label>
-                  <Textarea
-                    className="bg-stone-800 border-amber-500/20 text-amber-100"
-                    rows={6}
+                  <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-full h-48 object-cover"
                   />
                 </motion.div>
-
-                <motion.div
-                  className="md:col-span-2"
-                  variants={{
-                    hidden: { opacity: 0, y: 20 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                >
-                  <Button
-                    size="lg"
-                    className="w-full bg-amber-500 hover:bg-amber-600 text-white"
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold text-amber-100 mb-2">
+                    {product.title}
+                  </h3>
+                  <p className="text-amber-100/60 mb-4">
+                    {product.description}
+                  </p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="text-amber-400 font-medium flex items-center gap-2 hover:text-amber-300 transition-colors"
                   >
-                    Send Message
-                  </Button>
-                </motion.div>
-              </motion.form>
+                    Learn More <ArrowRight className="w-4 h-4" />
+                  </motion.button>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const sellingPoints = [
+  {
+    icon: <Award className="w-12 h-12" />,
+    title: "Premium Quality",
+    description: "Locally sourced, high-quality salt products",
+  },
+  {
+    icon: <Heart className="w-12 h-12" />,
+    title: "Community First",
+    description: "Driving positive change in the Ada region",
+  },
+  {
+    icon: <DollarSign className="w-12 h-12" />,
+    title: "Competitive Pricing",
+    description: "Excellent value without compromising quality",
+  },
+  {
+    icon: <Shield className="w-12 h-12" />,
+    title: "Trusted Partner",
+    description: "Reliable service and consistent delivery",
+  },
+];
+
+function SellingPoints() {
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  return (
+    <section
+      ref={ref}
+      className="py-32 bg-gradient-to-b from-stone-950 to-stone-900 relative"
+    >
+      <Particles />
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            Why Choose Us?
+          </h2>
+          <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
+            Excellence in every grain, commitment in every action
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {sellingPoints.map((point, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20 h-full group hover:border-amber-500/40 transition-colors">
+                <CardContent className="p-8 text-center">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="text-amber-400 mb-6 inline-block group-hover:text-amber-300 transition-colors"
+                  >
+                    {point.icon}
+                  </motion.div>
+                  <h3 className="text-xl font-semibold text-amber-100 mb-4 group-hover:text-amber-50 transition-colors">
+                    {point.title}
+                  </h3>
+                  <p className="text-amber-100/60 group-hover:text-amber-100/70 transition-colors">
+                    {point.description}
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Stats() {
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  const stats = [
+    { value: "10+", label: "Years Experience" },
+    { value: "1000+", label: "Happy Customers" },
+    { value: "500+", label: "Local Jobs Created" },
+    { value: "50K+", label: "Tons Produced" },
+  ];
+
+  return (
+    <section ref={ref} className="py-24 bg-amber-500 relative">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="text-center"
+            >
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={inView ? { scale: 1 } : {}}
+                transition={{
+                  type: "spring",
+                  stiffness: 100,
+                  delay: index * 0.1,
+                }}
+                className="text-4xl md:text-5xl font-bold text-stone-900 mb-2"
+              >
+                {stat.value}
+              </motion.div>
+              <div className="text-stone-700 font-medium">{stat.label}</div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// function Contact() {
+//   const [ref, inView] = useInView({
+//     threshold: 0.1,
+//     triggerOnce: true,
+//   });
+
+//   return (
+//     <section ref={ref} className="py-32 bg-stone-900 relative">
+//       <Particles />
+//       <div className="container mx-auto px-4">
+//         <motion.div
+//           initial={{ opacity: 0, y: 50 }}
+//           whileInView={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.8 }}
+//           className="text-center mb-16"
+//         >
+//           <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+//             Get In Touch
+//           </h2>
+//           <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
+//             Have questions? We're here to help.
+//           </p>
+//         </motion.div>
+
+//         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+//           {[
+//             {
+//               icon: <Phone className="w-8 h-8" />,
+//               title: "Phone",
+//               content: "+233 (0) 123 456 789",
+//             },
+//             {
+//               icon: <Mail className="w-8 h-8" />,
+//               title: "Email",
+//               content: "info@adayffd.com",
+//             },
+//             {
+//               icon: <MapPin className="w-8 h-8" />,
+//               title: "Location",
+//               content: "Ada, Greater Accra Region, Ghana",
+//             },
+//           ].map((item, index) => (
+//             <motion.div
+//               key={index}
+//               initial={{ opacity: 0, y: 50 }}
+//               animate={inView ? { opacity: 1, y: 0 } : {}}
+//               transition={{ duration: 0.5, delay: index * 0.1 }}
+//             >
+//               <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20">
+//                 <CardContent className="p-6 text-center">
+//                   <motion.div
+//                     whileHover={{ scale: 1.1 }}
+//                     className="text-amber-400 mb-4 inline-block"
+//                   >
+//                     {item.icon}
+//                   </motion.div>
+//                   <h3 className="text-lg font-semibold text-amber-100 mb-2">
+//                     {item.title}
+//                   </h3>
+//                   <p className="text-amber-100/60">{item.content}</p>
+//                 </CardContent>
+//               </Card>
+//             </motion.div>
+//           ))}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
+
+function Contact() {
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  return (
+    <section ref={ref} className="py-32 bg-stone-900 relative">
+      <Particles />
+      <div className="container mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+            Get In Touch
+          </h2>
+          <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
+            Have questions? We're here to help.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mb-20">
+          {[
+            {
+              icon: <Phone className="w-8 h-8" />,
+              title: "Phone",
+              content: "+233 (0) 123 456 789",
+            },
+            {
+              icon: <Mail className="w-8 h-8" />,
+              title: "Email",
+              content: "info@adayffd.com",
+            },
+            {
+              icon: <MapPin className="w-8 h-8" />,
+              title: "Location",
+              content: "Ada, Greater Accra Region, Ghana",
+            },
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20">
+                <CardContent className="p-6 text-center">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    className="text-amber-400 mb-4 inline-block"
+                  >
+                    {item.icon}
+                  </motion.div>
+                  <h3 className="text-lg font-semibold text-amber-100 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-amber-100/60">{item.content}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="max-w-2xl mx-auto"
+        >
+          <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20">
+            <CardContent className="p-8">
+              <form className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium text-amber-100"
+                    >
+                      Name
+                    </label>
+                    <input
+                      id="name"
+                      type="text"
+                      className="w-full px-4 py-3 rounded-lg bg-stone-800 border border-amber-500/20 text-amber-100 placeholder-amber-100/30 focus:outline-none focus:border-amber-500 transition-colors"
+                      placeholder="Your Name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium text-amber-100"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      id="phone"
+                      type="tel"
+                      className="w-full px-4 py-3 rounded-lg bg-stone-800 border border-amber-500/20 text-amber-100 placeholder-amber-100/30 focus:outline-none focus:border-amber-500 transition-colors"
+                      placeholder="Your Phone Number"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-amber-100"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    className="w-full px-4 py-3 rounded-lg bg-stone-800 border border-amber-500/20 text-amber-100 placeholder-amber-100/30 focus:outline-none focus:border-amber-500 transition-colors"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium text-amber-100"
+                  >
+                    Message
+                  </label>
+                  <textarea
+                    id="message"
+                    rows={5}
+                    className="w-full px-4 py-3 rounded-lg bg-stone-800 border border-amber-500/20 text-amber-100 placeholder-amber-100/30 focus:outline-none focus:border-amber-500 transition-colors resize-none"
+                    placeholder="Your Message"
+                  />
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-stone-900 rounded-lg font-semibold text-lg hover:from-amber-400 hover:to-amber-500 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-stone-900"
+                >
+                  Send Message
+                </motion.button>
+              </form>
             </CardContent>
           </Card>
         </motion.div>
       </div>
     </section>
   );
-};
+}
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="bg-stone-950 min-h-screen">
+    <main className="bg-stone-950 text-amber-100 min-h-screen">
       <Hero />
+      <Focus />
       <Products />
-      <About />
-      <Testimonials />
+      <SellingPoints />
+      <Stats />
       <Contact />
     </main>
   );
