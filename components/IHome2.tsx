@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import {
   motion,
@@ -218,55 +219,6 @@ const Products = () => {
 };
 
 // Rest of the components (About, Testimonials, Contact) remain the same...
-
-export default function Home() {
-  return (
-    <main className="bg-stone-950 min-h-screen">
-      <Hero />
-      <Products />
-      <About />
-      <Testimonials />
-      <Contact />
-    </main>
-  );
-}
-
-import React, { useState, useEffect } from "react";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  useSpring,
-  AnimatePresence,
-} from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import {
-  Leaf,
-  Heart,
-  Star,
-  Coffee,
-  ArrowRight,
-  Sparkles,
-  ShoppingBag,
-  Users,
-  Phone,
-  Globe,
-  Award,
-  TrendingUp,
-  Shield,
-} from "lucide-react";
 
 // Keeping your existing Particles component...
 
