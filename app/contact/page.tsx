@@ -17,7 +17,6 @@ import {
   MapPinned,
 } from "lucide-react";
 
-// Reusing the Particles component from AboutPage
 const Particles = () => {
   const particles = Array.from({ length: 50 });
   return (
@@ -204,19 +203,19 @@ function EnhancedContactInfo() {
           {[
             {
               icon: <Phone className="text-amber-400" />,
-              text: "+233 24 567 8901",
+              text: "0596009007",
             },
             {
               icon: <Mail className="text-amber-400" />,
-              text: "info@goldenharvestcashews.com",
+              text: "adayffd9007@gmail.com",
             },
             {
               icon: <MapPin className="text-amber-400" />,
-              text: "Sunyani, Bono Region, Ghana",
+              text: "Ada, Greater Accra Region Ghana, West Africa",
             },
             {
-              icon: <Clock className="text-amber-400" />,
-              text: "Mon - Fri: 9:00 AM - 5:00 PM",
+              icon: <Mail className="text-amber-400" />,
+              text: "P.O. Box 49 Ada, Greater Accra Region Ghana, West Africa",
             },
           ].map((item, index) => (
             <motion.div
@@ -230,28 +229,6 @@ function EnhancedContactInfo() {
               <span>{item.text}</span>
             </motion.div>
           ))}
-
-          <div className="pt-6 border-t border-amber-500/20">
-            <h4 className="font-semibold text-amber-100 mb-4">Follow Us</h4>
-            <div className="flex space-x-4">
-              <a
-                href="https://facebook.com/goldenharvestcashews"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-amber-400 hover:text-amber-300 transition-colors"
-              >
-                Facebook
-              </a>
-              <a
-                href="https://instagram.com/goldenharvestcashews"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-amber-400 hover:text-amber-300 transition-colors"
-              >
-                Instagram
-              </a>
-            </div>
-          </div>
         </CardContent>
       </Card>
     </motion.div>
@@ -280,7 +257,7 @@ function EnhancedMap() {
         </CardHeader>
         <CardContent className="p-0">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126448.12351395896!2d-2.3684119216796875!3d7.358641100000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdb0abe79ea294f%3A0x53e33fb5d4edf0f1!2sSunyani%2C%20Ghana!5e0!3m2!1sen!2sus!4v1635420985645!5m2!1sen!2sus"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127172.71269254878!2d0.5068750891276051!3d5.784885999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10207f49578add47%3A0xe4de8752a49b3c56!2sAda%2C%20Ghana!5e0!3m2!1sen!2s!4v1698075188001!5m2!1sen!2s"
             width="100%"
             height="450"
             style={{ border: 0 }}
