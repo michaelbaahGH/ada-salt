@@ -20,6 +20,7 @@ import {
   BookOpen,
   Heart,
 } from "lucide-react";
+import Link from "next/link";
 
 // Reuse the Particles component from your original code
 const Particles = () => {
@@ -168,16 +169,17 @@ function Hero() {
         <p className="text-2xl md:text-4xl text-amber-100 font-light tracking-wide mb-12">
           Sustainable Salt Production for Ada and Beyond
         </p>
-
-        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25"
-          >
-            Discover Our Products
-            <ChevronRight className="ml-2 h-6 w-6" />
-          </Button>
-        </motion.div>
+        <Link href="/products" passHref>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25"
+            >
+              Discover Our Products
+              <ChevronRight className="ml-2 h-6 w-6" />
+            </Button>
+          </motion.div>
+        </Link>
       </motion.div>
     </section>
   );
@@ -397,25 +399,35 @@ function CallToAction() {
             Get in touch today for high-quality products and expert services!
           </p>
           <div className="flex flex-col md:flex-row gap-4 justify-center">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25 w-full md:w-auto"
+            <Link href="/contact" passHref>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <PhoneCall className="w-6 h-6 mr-2" />
-                Contact Us
-              </Button>
-            </motion.div>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-amber-500 text-amber-400 hover:bg-amber-500/10 text-xl px-12 py-8 rounded-full w-full md:w-auto"
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25 w-full md:w-auto"
+                >
+                  <PhoneCall className="w-6 h-6 mr-2" />
+                  Contact Us
+                </Button>
+              </motion.div>
+            </Link>
+            <Link href="/contact" passHref>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <MessageSquare className="w-6 h-6 mr-2" />
-                Request Quote
-              </Button>
-            </motion.div>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-amber-500 text-amber-400 hover:bg-amber-500/10 text-xl px-12 py-8 rounded-full w-full md:w-auto"
+                >
+                  <MessageSquare className="w-6 h-6 mr-2" />
+                  Request Quote
+                </Button>
+              </motion.div>
+            </Link>
           </div>
         </motion.div>
       </div>

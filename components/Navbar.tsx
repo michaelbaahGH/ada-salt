@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 interface MenuItem {
   title: string;
@@ -149,7 +150,12 @@ const Navbar: React.FC = () => {
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-600"
               >
-                Logo
+                <Image
+                  src="/images/logo.png"
+                  alt="Description of the image"
+                  width={64}
+                  height={64}
+                />
               </motion.div>
             </a>
           </Link>

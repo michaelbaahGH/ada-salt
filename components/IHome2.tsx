@@ -28,6 +28,7 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
+import Link from "next/link";
 
 // Reusing the Particles component from the About page
 const Particles = () => {
@@ -133,21 +134,25 @@ function Hero() {
           transition={{ duration: 1, delay: 0.6 }}
           className="flex justify-center gap-6"
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-amber-500 text-stone-900 rounded-lg font-semibold text-lg flex items-center gap-2 hover:bg-amber-400 transition-colors"
-          >
-            Learn More
-            <ArrowRight className="w-5 h-5" />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 border-2 border-amber-500 text-amber-500 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-colors"
-          >
-            Contact Us
-          </motion.button>
+          <Link href="/services" passHref>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 bg-amber-500 text-stone-900 rounded-lg font-semibold text-lg flex items-center gap-2 hover:bg-amber-400 transition-colors"
+            >
+              Learn More
+              <ArrowRight className="w-5 h-5" />
+            </motion.button>
+          </Link>
+          <Link href="/contact" passHref>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 border-2 border-amber-500 text-amber-500 rounded-lg font-semibold text-lg hover:bg-amber-500/10 transition-colors"
+            >
+              Contact Us
+            </motion.button>
+          </Link>
         </motion.div>
       </motion.div>
 
@@ -240,17 +245,17 @@ const products = [
   {
     title: "Premium Salt",
     description: "High-quality, locally sourced salt for various applications",
-    image: "/api/placeholder/400/300",
+    image: "/images/salt5.webp",
   },
   {
     title: "Industrial Salt",
     description: "Bulk quantities for industrial and manufacturing needs",
-    image: "/api/placeholder/400/300",
+    image: "/images/industrial.webp",
   },
   {
     title: "Custom Solutions",
     description: "Tailored salt products for specific requirements",
-    image: "/api/placeholder/400/300",
+    image: "/images/custom2.jpg",
   },
 ];
 
@@ -460,76 +465,6 @@ function Stats() {
     </section>
   );
 }
-
-// function Contact() {
-//   const [ref, inView] = useInView({
-//     threshold: 0.1,
-//     triggerOnce: true,
-//   });
-
-//   return (
-//     <section ref={ref} className="py-32 bg-stone-900 relative">
-//       <Particles />
-//       <div className="container mx-auto px-4">
-//         <motion.div
-//           initial={{ opacity: 0, y: 50 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.8 }}
-//           className="text-center mb-16"
-//         >
-//           <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-//             Get In Touch
-//           </h2>
-//           <p className="text-xl text-amber-100/60 mt-4 max-w-2xl mx-auto">
-//             Have questions? We're here to help.
-//           </p>
-//         </motion.div>
-
-//         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-//           {[
-//             {
-//               icon: <Phone className="w-8 h-8" />,
-//               title: "Phone",
-//               content: "+233 (0) 123 456 789",
-//             },
-//             {
-//               icon: <Mail className="w-8 h-8" />,
-//               title: "Email",
-//               content: "info@adayffd.com",
-//             },
-//             {
-//               icon: <MapPin className="w-8 h-8" />,
-//               title: "Location",
-//               content: "Ada, Greater Accra Region, Ghana",
-//             },
-//           ].map((item, index) => (
-//             <motion.div
-//               key={index}
-//               initial={{ opacity: 0, y: 50 }}
-//               animate={inView ? { opacity: 1, y: 0 } : {}}
-//               transition={{ duration: 0.5, delay: index * 0.1 }}
-//             >
-//               <Card className="bg-stone-900/50 backdrop-blur-lg border-amber-500/20">
-//                 <CardContent className="p-6 text-center">
-//                   <motion.div
-//                     whileHover={{ scale: 1.1 }}
-//                     className="text-amber-400 mb-4 inline-block"
-//                   >
-//                     {item.icon}
-//                   </motion.div>
-//                   <h3 className="text-lg font-semibold text-amber-100 mb-2">
-//                     {item.title}
-//                   </h3>
-//                   <p className="text-amber-100/60">{item.content}</p>
-//                 </CardContent>
-//               </Card>
-//             </motion.div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }
 
 function Contact() {
   const [ref, inView] = useInView({

@@ -95,9 +95,14 @@ function EnhancedContactForm() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    subject: "",
+    phone: "",
     message: "",
   });
+  const [status, setStatus] = useState<
+    "idle" | "submitting" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -109,10 +114,29 @@ function EnhancedContactForm() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted", formData);
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setStatus("submitting");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit form");
+      }
+
+      setStatus("success");
+      setFormData({ name: "", email: "", phone: "", message: "" });
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage("Failed to submit form. Please try again later.");
+    }
   };
 
   return (
@@ -150,9 +174,9 @@ function EnhancedContactForm() {
             />
             <Input
               type="text"
-              name="subject"
-              placeholder="Subject"
-              value={formData.subject}
+              name="phone"
+              placeholder="Your phone number"
+              value={formData.phone}
               onChange={handleChange}
               required
               className="bg-stone-800/50 border-amber-500/20 focus:border-amber-500 focus:ring-amber-500 text-amber-100 placeholder:text-amber-100/50"

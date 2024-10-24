@@ -87,7 +87,7 @@ const products = [
       "Perfect for daily cooking",
       "Consistent quality",
     ],
-    image: "/api/placeholder/400/300",
+    image: "/images/salt5.webp",
   },
   {
     icon: Scale,
@@ -99,7 +99,7 @@ const products = [
       "Unique flavor profile",
       "Sustainable harvesting",
     ],
-    image: "/api/placeholder/400/300",
+    image: "/images/salt2.jpg",
   },
   {
     icon: Hearts,
@@ -111,7 +111,7 @@ const products = [
       "Consistent iodine levels",
       "Premium quality",
     ],
-    image: "/api/placeholder/400/300",
+    image: "/images/salt3.jpg",
   },
   {
     icon: Factory,
@@ -123,7 +123,7 @@ const products = [
       "Custom specifications",
       "Reliable supply",
     ],
-    image: "/api/placeholder/400/300",
+    image: "/images/salt-industrial.webp",
   },
 ];
 
@@ -162,18 +162,6 @@ function ProductHero() {
         <p className="text-2xl md:text-4xl text-amber-100 font-light tracking-wide mb-12">
           Elevating Quality, Empowering Communities
         </p>
-
-        <div className="flex flex-col md:flex-row gap-4 justify-center">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              size="lg"
-              className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white text-xl px-12 py-8 rounded-full shadow-lg shadow-amber-500/25"
-            >
-              View Products
-              <ChevronRight className="ml-2 h-6 w-6" />
-            </Button>
-          </motion.div>
-        </div>
       </motion.div>
     </section>
   );
